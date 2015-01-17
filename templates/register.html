@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Handle POST requests with Flask</title>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <div id="container">
+            <div class="title">
+                <h1>POST request with Flask</h1>
+            </div>
+            <div id="content">
+                <form method="post" action="{{ url_for('register') }}">
+		  {{ form.hidden_tag() }}
+                  <label for="email">Please enter your email:</label>
+                  <input type="text" name="email" /><br />
+                  <label for="server_url">Please enter your server url:</label>
+                  <input type="text" name="server_url" /><br />
+                  <label for="server_password">Please enter your server password:</label>
+                  <input type="password" name="server_password" /><br />
+                  <label for="twilio_number">Please enter your Twilio number:</label>
+                  <input type="text" name="twilio_number" /><br />
+                  <input type="submit" />
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
+ 
