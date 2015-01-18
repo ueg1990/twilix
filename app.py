@@ -1,24 +1,26 @@
 from flask import Flask, redirect, url_for, render_template, request 
 from flask.ext.sqlalchemy import SQLAlchemy
 import os
+#from fabric.api import *
+import subprocess
 
 from forms import UserRegistrationForm 
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 basedir = os.path.abspath(os.path.dirname(__file__))
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
 db = SQLAlchemy(app)
-db.create_all()
+#db.create_all()
 
 class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
-    server_url = db.Column(db.String(120), index=True, unique=True)
+    server_url = db.Column(db.String(120), index=True)
     server_password = db.Column(db.String(24))
-    email = db.Column(db.String(120), index=True, unique=True)
-    twilio_number = db.Column(db.String(60), index=True, unique=True)
+    email = db.Column(db.String(120), index=True)
+    twilio_number = db.Column(db.String(60), index=True)
 
     def __init__(self, email, server_url, server_password,twilio_number):
         self.email = email
@@ -47,10 +49,16 @@ def bye():
 def register():
     form = UserRegistrationForm()
     if request.method == 'POST' and form.validate_on_submit():
+	user = User(form.email.data, form.server_url.data, form.server_password.data, form.twilio_number.data)
+	db.session.add(user)
+	db.session.commit()
+        subprocess.call("fab -H {0} -u {1} -p {2} create".format(form.server_url.data, "root",form.server_password.data), shell=True)
+        #subprocess.call("fab -H {0} -u {1} -p {2} remote_uname".format(form.server_url.data, "root",form.server_password.data), shell=True)
 	return redirect(url_for('bye'))
     return render_template('register.html', form=form)
 
 
 if __name__ == "__main__":
     app.debug = True
+    db.create_all()
     app.run(host='0.0.0.0')
