@@ -6,15 +6,12 @@ from fabric.api import cd, env, lcd, put, prompt, local, sudo
 from fabric.contrib.files import exists
 
 local_app_directory = './twilix'
-local_config_directory = '/home'
+local_config_directory = './home'
 remote_app_directory = '/home/www'
 remote_git_directory = '/home/git/'
 remote_twilix_directory = remote_app_directory + '/twilix'
 remote_nginx_directory = '/etc/nginx/site-enabled'
 remote_supervisor_directory = '/etc/supervisor/conf.d'
-#env.hosts = [sys.argv[1]]
-#env.user = 'root'
-#env.password = sys.argv[2]
 
 def install_requirements():
     '''

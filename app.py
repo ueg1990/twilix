@@ -1,13 +1,12 @@
 from flask import Flask, redirect, url_for, render_template, request 
 from flask.ext.sqlalchemy import SQLAlchemy
 import os
-#from fabric.api import *
 import subprocess
 
 from forms import UserRegistrationForm 
 
 app = Flask(__name__)
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+app.secret_key = os.environ['FLASK_SECRET_KEY'] 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
@@ -53,7 +52,6 @@ def register():
 	db.session.add(user)
 	db.session.commit()
         subprocess.call("fab -H {0} -u {1} -p {2} create".format(form.server_url.data, "root",form.server_password.data), shell=True)
-        #subprocess.call("fab -H {0} -u {1} -p {2} remote_uname".format(form.server_url.data, "root",form.server_password.data), shell=True)
 	return redirect(url_for('bye'))
     return render_template('register.html', form=form)
 
