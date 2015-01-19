@@ -10,12 +10,10 @@ app = Flask(__name__)
 #app.config.from_object('config')
 db = SQLAlchemy(app)
 
-ACCOUNT_SID = "" #os.environ['ACCOUNT_SID']
-AUTH_TOKEN = "" #os.environ['AUTH_TOKEN']
-APP_SID = "Twilix" #os.environ['APP_SID']
-CALLER_ID = "+14389855700" #os.environ['CALLER_ID']
-#CALLER_ID = "+17038955689" #os.environ['CALLER_ID']
-#CALLER_ID = "+18175985398" #os.environ['CALLER_ID']
+ACCOUNT_SID = os.environ['ACCOUNT_SID']
+AUTH_TOKEN = os.environ['AUTH_TOKEN']
+APP_SID = os.environ['APP_SID']
+CALLER_ID = os.environ['CALLER_ID']
 
 @app.route("/")
 def index():
@@ -26,10 +24,13 @@ def sms():
     response = twiml.Response()
     user_input = request.form['Body']
     if '|' in user_input:
-	pass
+        args = user_input.split('|')
+        for index, arg in enumerate(args):
+	    args[index] = arg.lower().split()
+        output = cmds['pipe'](args)
     else:
 	args = user_input.lower().split() 
-        output = cmds[args[0]](args[1:])
+        output = cmds[args[0]](args)
     response.sms(output)
     return str(response)
 
