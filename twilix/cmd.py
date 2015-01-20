@@ -3,7 +3,7 @@ import subprocess
 import errno
 
 def cmd_pwd(*args):
-    return subprocess.check_output(['pwd'])
+    return subprocess.check_output(*args)
 
 def cmd_ls(*args):
     return subprocess.check_output(*args)
@@ -19,7 +19,7 @@ def cmd_mkdir(*args):
         if args[0][1][0] == '~':
             args[0][1] = os.path.expanduser(args[0][1])
 	os.makedirs(args[0][1])
-        return "Director {0} created".format(args[0][1])
+        return "Directory {0} created".format(args[0][1])
     except OSError as exception:
         if exception.errno != errno.EEXIST:
 	    raise

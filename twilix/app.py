@@ -1,5 +1,4 @@
 from flask import Flask, request
-from flask.ext.sqlalchemy import SQLAlchemy
 from twilio import twiml
 import subprocess
 import os
@@ -7,8 +6,6 @@ import os
 from cmd import cmds
 
 app = Flask(__name__)
-#app.config.from_object('config')
-db = SQLAlchemy(app)
 
 ACCOUNT_SID = os.environ['ACCOUNT_SID']
 AUTH_TOKEN = os.environ['AUTH_TOKEN']
@@ -26,15 +23,14 @@ def sms():
     if '|' in user_input:
         args = user_input.split('|')
         for index, arg in enumerate(args):
-	    args[index] = arg.lower().split()
+	    args[index] = arg.split()
         output = cmds['pipe'](args)
     else:
-	args = user_input.lower().split() 
+	args = user_input.split() 
         output = cmds[args[0]](args)
     response.sms(output)
     return str(response)
 
 if __name__ == "__main__":
-    #app.run(debug=True)
     app.debug = True
     app.run(host='0.0.0.0')
