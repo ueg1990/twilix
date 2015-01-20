@@ -17,13 +17,15 @@ class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
     server_url = db.Column(db.String(120), index=True)
+    server_user = db.Column(db.String(60), index=True)
     server_password = db.Column(db.String(24))
     email = db.Column(db.String(120), index=True)
     twilio_number = db.Column(db.String(60), index=True)
 
-    def __init__(self, email, server_url, server_password,twilio_number):
+    def __init__(self, email, server_url, server_user, server_password,twilio_number):
         self.email = email
         self.server_url = server_url
+        self.server_user = server_user
         self.server_password = server_password
         self.twilio_number = self._format_number(twilio_number)
 
@@ -48,10 +50,10 @@ def bye():
 def register():
     form = UserRegistrationForm()
     if request.method == 'POST' and form.validate_on_submit():
-	user = User(form.email.data, form.server_url.data, form.server_password.data, form.twilio_number.data)
+	user = User(form.email.data, form.server_url.data, form.server_user.data,form.server_password.data, form.twilio_number.data)
 	db.session.add(user)
 	db.session.commit()
-        subprocess.call("fab -H {0} -u {1} -p {2} create".format(form.server_url.data, "root",form.server_password.data), shell=True)
+        subprocess.call("fab -H {0} -u {1} -p {2} create".format(form.server_url.data, form.server_user.data,form.server_password.data), shell=True)
 	return redirect(url_for('bye'))
     return render_template('register.html', form=form)
 
