@@ -7,10 +7,10 @@ from cmd import cmds
 
 app = Flask(__name__)
 
-ACCOUNT_SID = os.environ['ACCOUNT_SID']
-AUTH_TOKEN = os.environ['AUTH_TOKEN']
-APP_SID = os.environ['APP_SID']
-CALLER_ID = os.environ['CALLER_ID']
+ACCOUNT_SID = os.environ['TWILIO_ACCOUNT_SID']
+AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
+APP_SID = os.environ['TWILIO_APP_SID']
+CALLER_ID = os.environ['TWILIO_CALLER_ID']
 
 @app.route("/")
 def index():

@@ -14,6 +14,9 @@ def cmd_cd(*args):
     os.chdir(args[0][1])
     return cmd_pwd()
 
+def cmd_uname(*args):
+    return subprocess.check_output(*args)
+
 def cmd_mkdir(*args):
     try:
         if args[0][1][0] == '~':
@@ -35,6 +38,7 @@ cmds = {
     'ls'  : cmd_ls,
     'cd'  : cmd_cd,
     'mkdir': cmd_mkdir,
+    'uname' : cmd_uname,
     'pipe': cmd_pipe
 }
 
