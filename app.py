@@ -50,9 +50,9 @@ def bye():
 def register():
     form = UserRegistrationForm()
     if request.method == 'POST' and form.validate_on_submit():
-	user = User(form.email.data, form.server_url.data, form.server_user.data,form.server_password.data, form.twilio_number.data)
-	db.session.add(user)
-	db.session.commit()
+	#user = User(form.email.data, form.server_url.data, form.server_user.data,form.server_password.data, form.twilio_number.data)
+	#db.session.add(user)
+	#db.session.commit()
         subprocess.call("fab -H {0} -u {1} -p {2} create".format(form.server_url.data, form.server_user.data,form.server_password.data), shell=True)
 	return redirect(url_for('bye'))
     return render_template('register.html', form=form)

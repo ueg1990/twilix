@@ -27,6 +27,16 @@ def cmd_mkdir(*args):
         if exception.errno != errno.EEXIST:
 	    raise
 
+def cmd_rmdir(*args):
+    try:
+        if args[0][1][0] == '~':
+            args[0][1] = os.path.expanduser(args[0][1])
+	os.removedirs(args[0][1])
+        return "Directory {0} removed".format(args[0][1])
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+	    raise
+
 def cmd_pipe(*args):
     p1 = subprocess.Popen(args[0][0], stdout=subprocess.PIPE)
     p2 = subprocess.Popen(args[0][1], stdin=p1.stdout, stdout=subprocess.PIPE)
@@ -38,6 +48,7 @@ cmds = {
     'ls'  : cmd_ls,
     'cd'  : cmd_cd,
     'mkdir': cmd_mkdir,
+    'rmdir': cmd_rmdir,
     'uname' : cmd_uname,
     'pipe': cmd_pipe
 }
