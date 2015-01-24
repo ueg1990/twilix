@@ -17,6 +17,9 @@ def cmd_cd(*args):
 def cmd_uname(*args):
     return subprocess.check_output(*args)
 
+def cmd_df(*args):
+    return subprocess.check_output(*args)
+
 def cmd_mkdir(*args):
     try:
         if args[0][1][0] == '~':
@@ -50,6 +53,7 @@ cmds = {
     'mkdir': cmd_mkdir,
     'rmdir': cmd_rmdir,
     'uname' : cmd_uname,
+    'df': cmd_df,
     'pipe': cmd_pipe
 }
 
