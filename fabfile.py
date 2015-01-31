@@ -2,15 +2,15 @@
 
 import sys
 import os
-from fabric.api import cd, env, lcd, put, prompt, local, sudo
+from fabric.api import cd, env, lcd, put, prompt, local, sudo, run
 from fabric.contrib.files import exists
 
 local_app_directory = './twilix'
-local_config_directory = './home'
+local_config_directory = './config_twilix'
 remote_app_directory = '/home/www'
 remote_git_directory = '/home/git/'
 remote_twilix_directory = remote_app_directory + '/twilix'
-remote_nginx_directory = '/etc/nginx/site-enabled'
+remote_nginx_directory = '/etc/nginx/sites-enabled'
 remote_supervisor_directory = '/etc/supervisor/conf.d'
 
 def install_requirements():
@@ -44,6 +44,7 @@ def install_flask_dependencies():
 	    sudo('virtualenv venv')
             sudo('source venv/bin/activate')
             sudo('pip install Flask==0.10.1')
+            sudo('pip install twilio==3.6.15')
 	with cd(remote_twilix_directory):
 	    put('*', './', use_sudo=True)
 
@@ -58,13 +59,13 @@ def configure_nginx():
     sudo('/etc/init.d/nginx start')
     if exists('/etc/nginx/sites-enabled/default'):
 	sudo('rm /etc/nginx/sites-enabled/default')
-    if exists('/etc/nginx/sites-enabled/twilix' is False):
-	sudo('touch /etc/nginx/sites-available/twilix')
-        sudo('ln -s /etc/nginx/sites-available/twilix /etc/nginx/sites-enabled/twilix')
+    if exists('/etc/nginx/sites-enabled/twilix_nginx.conf' is False):
+	sudo('touch /etc/nginx/sites-available/twilix_nginx.conf')
+        sudo('ln -s /etc/nginx/sites-available/twilix_nginx.conf /etc/nginx/sites-enabled/twilix_nginix.conf')
     with lcd(local_config_directory):
 	with cd(remote_nginx_directory):
-	    put('twilix_config', '.', use_sudo=True)
-    sudo('/etc/init.d/nginx/restart')
+	    put('twilix_nginx.conf', '.', use_sudo=True)
+    sudo('/etc/init.d/nginx restart')
 
 def configure_supervisor():
     """
@@ -75,7 +76,7 @@ def configure_supervisor():
     if exists('/etc/supervisor/conf.d/twilix.conf') is False:
 	with lcd(local_config_directory):
 	    with cd(remote_supervisor_directory):
-		put('./twilix.conf', './', use_sudo=True)
+		put('twilix_supervisor.conf', './', use_sudo=True)
 		sudo('supervisorctl reread')
 		sudo('supervisorctl update')
 

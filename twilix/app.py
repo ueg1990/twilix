@@ -14,7 +14,7 @@ CALLER_ID = os.environ['TWILIO_CALLER_ID']
 
 @app.route("/")
 def index():
-    return "Hello, world"
+    return "Hello, world!!!!"
 
 @app.route('/sms', methods=['POST'])
 def sms():
@@ -32,5 +32,6 @@ def sms():
     return str(response)
 
 if __name__ == "__main__":
-    app.debug = True
-    app.run(host='0.0.0.0')
+    #app.debug = True
+    #app.run(host='0.0.0.0')
+    app.run()
