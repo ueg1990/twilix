@@ -2,7 +2,7 @@
 
 import sys
 import os
-from fabric.api import cd, env, lcd, put, prompt, local, sudo, run
+from fabric.api import cd, env, lcd, put, prompt, local, sudo
 from fabric.contrib.files import exists
 
 local_app_directory = './twilix'
@@ -100,3 +100,4 @@ def create():
     install_flask_dependencies()
     configure_nginx()
     configure_supervisor()
+    run_app()
