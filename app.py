@@ -4,11 +4,13 @@ import os
 import subprocess
 
 from forms import UserRegistrationForm 
+from twilio.rest import TwilioRestClient
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY'] 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
+TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
 
 db = SQLAlchemy(app)
 #db.create_all()
@@ -40,7 +42,7 @@ class User(db.Model):
 
 @app.route("/")
 def hello():
-    return "Hello World!"
+    return "Hello World!!!"
 
 @app.route("/bye/")
 def bye():
@@ -53,12 +55,21 @@ def register():
 	#user = User(form.email.data, form.server_url.data, form.server_user.data,form.server_password.data, form.twilio_number.data)
 	#db.session.add(user)
 	#db.session.commit()
-        subprocess.call("fab -H {0} -u {1} -p {2} create".format(form.server_url.data, form.server_user.data,form.server_password.data), shell=True)
+        subprocess.call("fab -H {0} -u {1} -p {2} create:{3}".format(form.server_url.data, form.server_user.data,form.server_password.data, form.twilio_number.data), shell=True)
 	return redirect(url_for('bye'))
     return render_template('register.html', form=form)
-
 
 if __name__ == "__main__":
     app.debug = True
     db.create_all()
     app.run(host='0.0.0.0')
+
+#client = TwilioRestClient(account_sid, TWILIO_AUTH_TOKEN)
+#for number in client.phone_numbers.list():
+#print number.phone_number
+#number.update(sms_url='http://'+form.server_url.data+'/sms')
+#sms = "http://"+form.server_url.data+"/sms"
+#print sms
+#client.phone_numbers.update(number.sid, sms_url="http://"+form.server_url.data+"/sms")
+#print client.phone_numbers.get(number.sid)
+#return redirect(url_for('bye'))

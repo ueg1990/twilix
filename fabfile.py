@@ -27,7 +27,7 @@ def install_requirements():
     sudo('apt-get install -y supervisor')
     sudo('apt-get install -y git')
 
-def install_flask_dependencies():
+def install_flask_dependencies(number):
     """
     1. Create project directories
     2. Create and activate a virtualenv
@@ -47,6 +47,8 @@ def install_flask_dependencies():
             sudo('pip install twilio==3.6.15')
 	with cd(remote_twilix_directory):
 	    put('*', './', use_sudo=True)
+    sudo("echo 'export USER_NUMBER=%s' >> /root/.bash_profile" % number)
+    sudo("source /root/.bash_profile")
 
 def configure_nginx():
     """
@@ -95,9 +97,9 @@ def status():
     '''
     sudo('supervisorctl status')
 
-def create():
+def create(number):
     install_requirements()
-    install_flask_dependencies()
+    install_flask_dependencies(number)
     configure_nginx()
     configure_supervisor()
     run_app()
